@@ -1,0 +1,46 @@
+name: GitVersion Release
+
+on:
+  push:
+    branches:
+      - main
+      - staging
+      - dev
+      - feature/*
+  pull_request:
+    branches:
+      - main
+      - staging
+      - dev
+      - feature/*
+
+jobs:
+  versioning:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install GitVersion
+        uses: gittools/actions/gitversion/setup@v3.0.0
+        with:
+          versionSpec: '6.x'
+
+      - name: Execute Git Version
+        uses: gittools/actions/gitversion/execute@v3.0.0
+        with:
+          useConfigFile: true # Uses the GitVersion.yml file in the root of the project
+
+      - name: Build and Version
+        run: |
+          echo "##[set-output name=GITVERSION;]$(gitversion /showvariable SemVer)"
+          echo "Version: $(gitversion /showvariable SemVer)"
+
+      - name: Push Version Tag
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git tag v$(gitversion /showvariable SemVer)
+          git push origin v$(gitversion /showvariable SemVer)

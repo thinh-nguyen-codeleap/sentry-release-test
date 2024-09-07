@@ -1,0 +1,14 @@
+# Ignore node_modules directory
+node_modules
+
+# Ignore build output directories
+.next
+out
+
+# Ignore log files and directories
+logs
+*.log
+
+# Ignore Docker-related files
+Dockerfile
+.dockerignore
