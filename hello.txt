@@ -1,4 +1,1 @@
 hello
-hello
-hello
-QA says it's okay
